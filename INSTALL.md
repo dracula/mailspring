@@ -1,17 +1,18 @@
-### [X](http://link-to-x.com)
+### [Mailspring](https://getmailspring.com/)
 
 #### Install using Git
 
 If you are a git user, you can install the theme and keep up to date by cloning the repo:
 
-    $ git clone https://github.com/dracula/template.git
+    $ git clone https://github.com/dracula/mailspring.git
 
 #### Install manually
 
-Download using the [GitHub .zip download](https://github.com/dracula/template/archive/master.zip) option and unzip them.
+Download using the [GitHub .zip download](https://github.com/dracula/mailspring/archive/master.zip) option and unzip them.
 
 #### Activating theme
 
-1. Do this
-2. Then that
-3. Boom! It's working
+1. Open Mailspring
+1. On menu Mailspring > Install New Theme... and selecting the directory
+1. Close and reopen Mailspring
+1. Boom! It's working
