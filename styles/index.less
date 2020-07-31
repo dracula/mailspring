@@ -58,3 +58,19 @@ img.content-light {
 .thread-list .list-item:not(.unread):not(.selected):not(.focused) {
   color: @foreground-color;
 }
+
+.sidebar-activity {
+  .item {
+    .sync-activity {
+      .account {
+        .folder-progress::before {
+          background-color: @green-color;
+        }
+        .folder-progress.busy::before {
+
+          border: solid 2px @green-color;
+        }
+      }
+    }
+  }
+}
