@@ -64,5 +64,20 @@ img.content-light {
     border-color: @background-color;
     color: @background-color;
     background: @purple-color;
+}
+  
+.sidebar-activity {
+  .item {
+    .sync-activity {
+      .account {
+        .folder-progress::before {
+          background-color: @green-color;
+        }
+        .folder-progress.busy::before {
+
+          border: solid 2px @green-color;
+        }
+      }
+    }
   }
 }
