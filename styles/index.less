@@ -23,6 +23,7 @@ here, so you can use modern CSS like -webkit-filter and -webkit-mask-image
 (which is used to make most of the icons in the app styleable via a
 background color.)
 */
+
 .sheet-toolbar {
   border-bottom: 1px solid @border-color-divider;
   box-shadow: none;
@@ -31,9 +32,11 @@ background color.)
 .thread-icon:not(.thread-icon-unread):not(.thread-icon-star) {
   -webkit-filter: invert(100%);
 }
+
 img.content-dark {
   -webkit-filter: invert(100%);
 }
+
 img.content-light {
   -webkit-filter: invert(100%);
 }
@@ -47,11 +50,13 @@ img.content-light {
     0 1px 1.5px @selection-color;
 }
 
-.thread-list .thread-icon.thread-icon-unread, .draft-list .thread-icon.thread-icon-unread{
+.thread-list .thread-icon.thread-icon-unread,
+.draft-list .thread-icon.thread-icon-unread {
   color: @cyan-color;
 }
 
-.thread-list .thread-icon.thread-icon-star, .draft-list .thread-icon.thread-icon-star {
+.thread-list .thread-icon.thread-icon-star,
+.draft-list .thread-icon.thread-icon-star {
   color: @yellow-color;
 }
 
@@ -74,11 +79,54 @@ img.content-light {
         .folder-progress::before {
           background-color: @green-color;
         }
-        .folder-progress.busy::before {
 
+        .folder-progress.busy::before {
           border: solid 2px @green-color;
         }
       }
     }
   }
+}
+
+.list-column-HoverActions {
+
+  .action-snooze,
+  .action-trash,
+  .action-archive {
+    background-color: @yellow-color;
+    color: @background-color;
+  }
+}
+
+.thread-icon:not(.thread-icon-unread):not(.thread-icon-star) {
+  filter: invert(100%);
+}
+
+.account-details {
+  background-color: @selection-color;
+}
+
+.platform-note {
+  border-left: 3px solid @cyan-color;
+  color: @cyan-color;
+}
+
+.usage-note {
+  color: @background-color;
+  background: @yellow-color;
+  border-left: 4px solid darken(@yellow-color, 50%);
+}
+
+.thread-list-empty-folder-bar {
+  color: @background-color  !important;
+  background-color: @yellow-color;
+  border-bottom: 1px solid darken(@yellow-color, 50%);
+}
+
+img.content-dark {
+  filter: invert(100%) !important;
+}
+
+img.content-light {
+  filter: invert(100%) !important;
 }
