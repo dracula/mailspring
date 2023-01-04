@@ -9,19 +9,16 @@ export default class BackgroundImageFix extends MessageViewExtension {
       let fixInvert = false;
 
       if (getComputedStyle(tag).backgroundImage !== 'none') {
+        fixInvert = true; 
+      }
+      if (tag.tagName === "IMG") {
         fixInvert = true;
       }
 
       // using this method so more can be added later
       if (fixInvert) {
         tag.style.filter = "invert(1)";
-        tag.style.color = "#111";
-      }
-
-      // fix images
-      if (tag.tagName === "IMG") {
-        tag.style.filter = "invert(1)";
-        tag.style.color = "#111";
+        tag.style.color = "#000";
       }
     })
   } 
