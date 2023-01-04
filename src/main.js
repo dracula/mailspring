@@ -19,6 +19,6 @@ function fixBackgroundImages() {
 }
 
 
-export function activate(state) {
+export function activate() {
   fixBackgroundImages();
 }
