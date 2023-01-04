@@ -16,6 +16,11 @@ export default class BackgroundImageFix extends MessageViewExtension {
       if (fixInvert) {
         tag.style.filter = "invert(1)";
       }
+
+      // fix images
+      if (tag.tagName === "IMG") {
+        tag.parentNode.style.filter = "invert(1)";
+      }
     })
   } 
 }
