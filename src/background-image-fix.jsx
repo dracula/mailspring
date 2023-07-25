@@ -1,74 +1,71 @@
 import { MessageViewExtension } from 'mailspring-exports'
 
-function isImageDark(imageUrl, threshold = 128, quality = 10, callback) {
-    let img = document.createElement('img');
-    img.src = imageUrl;
-    img.style.display = 'none';
-    document.body.appendChild(img);
+function getAverageColor(imgEl, quality = 10) {
+    let canvas = document.createElement('canvas');
+    let context = canvas.getContext('2d');
+    let i = -4, length, data, count = 0;
+    let rgb = { r:0, g:0, b:0 };
 
-    img.onload = function() {
-        // create canvas
-        let canvas = document.createElement('canvas');
-        canvas.width = this.naturalWidth; // or 'this.width' if you want a special/scaled size
-        canvas.height = this.naturalHeight; // or 'this.height' if you want a special/scaled size
+    let height = canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height;
+    let width = canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width;
 
-        // draw image onto canvas
-        let ctx = canvas.getContext('2d');
-        ctx.drawImage(this, 0, 0);
+    context.drawImage(imgEl, 0, 0, width, height);
+    data = context.getImageData(0, 0, width, height).data;
+    length = data.length;
 
-        let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        let data = imageData.data;
-        let r, g, b, avg;
-        let colorSum = 0;
-        let pixelsChecked = 0;
+    while ( (i += quality * 4) < length ) {
+        ++count;
+        rgb.r += data[i];
+        rgb.g += data[i+1];
+        rgb.b += data[i+2];
+    }
 
-        for(let x = 0, len = data.length; x < len; x+=4*quality) {
-            r = data[x];
-            g = data[x+1];
-            b = data[x+2];
+    rgb.r = Math.floor(rgb.r/count);
+    rgb.g = Math.floor(rgb.g/count);
+    rgb.b = Math.floor(rgb.b/count);
 
-            avg = Math.floor((r+g+b)/3);
-            colorSum += avg;
-            pixelsChecked++;
-        }
+    return rgb;
+}
 
-        let brightness = Math.floor(colorSum / pixelsChecked);
-        callback(brightness < threshold);
+function isImageDark(imageData) {
+    const avg = (imageData.r + imageData.g + imageData.b) / 3;
+    return avg < 128;
+}
 
-        // cleanup
-        document.body.removeChild(img);
+function getImageEl(tag) {
+    if (tag.tagName === "IMG") {
+        return tag;
+    }
+
+    const backgroundImage = getComputedStyle(tag).backgroundImage;
+    if (backgroundImage !== 'none') {
+        let img = new Image();
+        img.src = backgroundImage.slice(5, -2); // Remove url(" and ")
+        return img;
+    }
+
+    return null;
+}
+
+export default class BackgroundImageFix extends MessageViewExtension {
+    static renderedMessageBodyIntoDocument({document, message, iframe}) {
+        const frameDocument = iframe.contentWindow.document;
+        const tags = frameDocument.querySelectorAll("*");
+
+        tags.forEach(tag => {
+            let imgEl = getImageEl(tag);
+            if (imgEl && imgEl.complete && imgEl.naturalHeight !== 0) {
+                let imageData = getAverageColor(imgEl, 10);
+                if (isImageDark(imageData)) {
+                    tag.style.filter = "";
+                } else {
+                    tag.style.filter = "invert(1)";
+                }
+                tag.style.color = "#f8f8f2";
+                tag.style.backgroundColor = "#44475a";
+            }
+        });
     }
 }
 
 
-export default class BackgroundImageFix extends MessageViewExtension {
-  static renderedMessageBodyIntoDocument({document, message, iframe}) {
-    const frameDocument = iframe.contentWindow.document;
-
-    const tags = frameDocument.querySelectorAll("*");
-    tags.forEach(tag => {
-      let fixInvert = false;
-
-      if (getComputedStyle(tag).backgroundImage !== 'none') {
-        fixInvert = true; 
-      }
-      if (tag.tagName === "IMG") {
-        fixInvert = true;
-      }
-
-      // using this method so more can be added later
-      if (fixInvert) {
-        isImageDark(tag.src, 128, 10, function(isDark) {
-          if (isDark) {
-            tag.style.filter = ""
-          } else {
-            tag.style.filter = "invert(1)"
-          }
-        })
-
-        //tag.style.filter = "invert(1)";
-        tag.style.color = "#000";
-      }
-    })
-  } 
-}
